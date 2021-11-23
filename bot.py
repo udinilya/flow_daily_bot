@@ -9,11 +9,10 @@ def register_callback(update: Update, context: CallbackContext):
                              text='Напоминания о статусах запущены')
 
     def daily_message(context: CallbackContext):
-         context.bot.send_message(chat_id=chat_id,
+         context.bot.send_message(chat_id=update.message.chat_id,
                                   text='Не забудьте написать о выполненных задачах')
 
     context.job_queue.run_daily(daily_message, time=datetime.time(10, 0, tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
-    chat_id = update.message.chat_id
 
 
 updater = Updater('2115574444:AAHL5eyZCEjkQRn4FILqYdXvhR4UJp76Ih0')
