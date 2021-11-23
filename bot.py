@@ -4,16 +4,15 @@ import datetime
 import pytz
 
 
-def daily_message(context: CallbackContext):
-    context.bot.send_message(chat_id=x,
-                             text='Не забудьте написать о выполненных задачах')
-
-
 def register_callback(update: Update, context: CallbackContext):
-    global x
     context.bot.send_message(chat_id=update.message.chat_id,
                              text='Напоминания о статусах запущены')
-    context.job_queue.run_daily(daily_message, time=datetime.time(10, 0, tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
+
+    def daily_message(context: CallbackContext):
+         context.bot.send_message(chat_id=x,
+                                  text='Не забудьте написать о выполненных задачах')
+
+    context.job_queue.run_daily(daily_message, time=datetime.time(17, 27, tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
     x = update.message.chat_id
 
 
