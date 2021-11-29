@@ -13,10 +13,10 @@ def register_callback(update: Update, context: CallbackContext):
                                   text='Не забудьте написать о выполненных задачах')
 
     def remind_about_missed_persons(context: CallbackContext):
-        with open('responded_members.txt', 'r', encoding='utf8') as f:
+        with open(f'responded_members/responded_members{update.message.chat_id}.txt', 'r', encoding='utf8') as f:
             respond_list = f.readlines()
 
-        with open('chat_members.txt', 'r', encoding='utf8') as f:
+        with open(f'chat_members{update.message.chat_id}.txt', 'r', encoding='utf8') as f:
             chat_list = f.readlines()
 
         for user in chat_list:
@@ -24,20 +24,20 @@ def register_callback(update: Update, context: CallbackContext):
                 context.bot.send_message(chat_id=update.message.chat_id,
                                          text=f'Не направлен стaтус от...{user}')
 
-    context.job_queue.run_daily(remind_about_status, time=datetime.time(11, 15, tzinfo=pytz.timezone('Europe/Moscow')),
+    context.job_queue.run_daily(remind_about_status, time=datetime.time(14, 32, tzinfo=pytz.timezone('Europe/Moscow')),
                                 days=tuple(range(0, 5)))
-    context.job_queue.run_daily(remind_about_missed_persons, time=datetime.time(11, 47, tzinfo=pytz.timezone('Europe/Moscow')),
+    context.job_queue.run_daily(remind_about_missed_persons, time=datetime.time(14, 33, tzinfo=pytz.timezone('Europe/Moscow')),
                                 days=tuple(range(0, 5)))
 
 
 def get_responded_members(update: Update, context: CallbackContext):
-    f = open('responded_members.txt', 'a+', encoding='utf8')
+    f = open(f'responded_members/responded_members{update.message.chat_id}.txt', 'a+', encoding='utf8')
     print(update.effective_user.name, file=f)
     f.close()
 
 
 def get_chat_members(update: Update, context: CallbackContext):
-    f = open('chat_members.txt', 'a+', encoding='utf8')
+    f = open(f'chat_members{update.message.chat_id}.txt', 'a+', encoding='utf8')
     print(update.effective_user.name, file=f)
     f.close()
 
