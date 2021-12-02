@@ -13,10 +13,12 @@ def register_callback(update: Update, context: CallbackContext):
                                   text='Не забудьте написать о выполненных задачах')
 
     def remind_about_missed_persons(context: CallbackContext):
-        with open(f'flow_daily_bot/responded_members/responded_members{update.message.chat_id}.txt', 'r', encoding='utf8') as f:
+        with open(f'flow_daily_bot/responded_members/responded_members{update.message.chat_id}.txt', 'r',
+                  encoding='utf8') as f:
             respond_list = f.readlines()
 
-        with open(f'flow_daily_bot/chat_members/chat_members{update.message.chat_id}.txt', 'r', encoding='utf8') as f:
+        with open(f'flow_daily_bot/chat_members/chat_members{update.message.chat_id}.txt', 'r',
+                  encoding='utf8') as f:
             chat_list = f.readlines()
 
         for user in chat_list:
@@ -31,15 +33,14 @@ def register_callback(update: Update, context: CallbackContext):
 
 
 def get_responded_members(update: Update, context: CallbackContext):
-    f = open(f'flow_daily_bot/responded_members/responded_members{update.message.chat_id}.txt', 'a+', encoding='utf8')
-    print(update.effective_user.name, file=f)
-    f.close()
+    with open(f'flow_daily_bot/responded_members/responded_members{update.message.chat_id}.txt', 'a+',
+              encoding='utf8') as f:
+        print(update.effective_user.name, file=f)
 
 
 def get_chat_members(update: Update, context: CallbackContext):
-    f = open(f'flow_daily_bot/chat_members/chat_members{update.message.chat_id}.txt', 'a+', encoding='utf8')
-    print(update.effective_user.name, file=f)
-    f.close()
+    with open(f'flow_daily_bot/chat_members/chat_members{update.message.chat_id}.txt', 'a+', encoding='utf8') as f:
+        print(update.effective_user.name, file=f)
 
 
 persistence = PicklePersistence(filename='persistent_storage.pkl')
