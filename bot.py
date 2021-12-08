@@ -75,7 +75,7 @@ updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_li
 updater.dispatcher.add_handler(CommandHandler('run', get_chat_members))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, get_responded_members))
 
-updater.job_queue.run_daily(status_reminders_are_running, time=datetime.time(9, 0, tzinfo=pytz.timezone('Europe/Moscow')),
+updater.job_queue.run_daily(status_reminders_are_running, time=datetime.time(13, 20, tzinfo=pytz.timezone('Europe/Moscow')),
                             days=tuple(range(0, 5)))
 updater.job_queue.run_daily(remind_about_status, time=datetime.time(10, 0, tzinfo=pytz.timezone('Europe/Moscow')),
                             days=tuple(range(0, 5)))
