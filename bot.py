@@ -8,7 +8,7 @@ import os
 
 
 def status_reminders_are_running(context: CallbackContext):
-    with open('chat_list.txt', 'r', encoding='utf8') as f:
+    with open('/home/udin76/chat_list/chat_list.txt', 'r', encoding='utf8') as f:
         chat_list = f.readlines()
         for chat_id in chat_list:
             try:
@@ -19,7 +19,7 @@ def status_reminders_are_running(context: CallbackContext):
 
 
 def remind_about_status(context: CallbackContext):
-    with open('chat_list.txt', 'r', encoding='utf8') as f:
+    with open('/home/udin76/chat_list/chat_list.txt', 'r', encoding='utf8') as f:
         chat_list = f.readlines()
         for chat_id in chat_list:
             try:
@@ -29,60 +29,60 @@ def remind_about_status(context: CallbackContext):
 
 
 def add_chat_id_in_chat_list(update: Update, context: CallbackContext):
-    with open(f'chat_list.txt', 'a+', encoding='utf8') as f:
+    with open(f'/home/udin76/chat_list/chat_list.txt', 'a+', encoding='utf8') as f:
         pass
 
-    with open('chat_list.txt', 'r', encoding='utf8') as f:
+    with open('/home/udin76/chat_list/chat_list.txt', 'r', encoding='utf8') as f:
         chat_list = []
         for chat_id in f:
             chat_list.append(int(chat_id.strip()))
 
     if update.message.chat_id not in chat_list:
-        with open('chat_list.txt', 'a', encoding='utf8') as f:
+        with open('/home/udin76/chat_list/chat_list.txt', 'a', encoding='utf8') as f:
             print(update.message.chat_id, file=f)
 
 
 def get_chat_members(update: Update, context: CallbackContext):
-    with open(f'chat_members/chat_members{update.message.chat_id}.txt', 'a+',
+    with open(f'/home/udin76/chat_members/chat_members{update.message.chat_id}.txt', 'a+',
             encoding='utf8') as f:
         pass
 
-    with open(f'chat_members/chat_members{update.message.chat_id}.txt', 'r',
+    with open(f'/home/udin76/chat_members/chat_members{update.message.chat_id}.txt', 'r',
                 encoding='utf8') as f:
         chat_members = []
         for user_name in f:
             chat_members.append(str(user_name.strip()))
 
     if update.effective_user.name not in chat_members:
-        with open(f'chat_members/chat_members{update.message.chat_id}.txt', 'a',
+        with open(f'/home/udin76/chat_members/chat_members{update.message.chat_id}.txt', 'a',
                 encoding='utf8') as f:
             print(update.effective_user.name, file=f)
 
 
 def get_responded_members(update: Update, context: CallbackContext):
-    with open(f'responded_members/responded_members{update.message.chat_id}.txt', 'a+',
+    with open(f'/home/udin76/responded_members/responded_members{update.message.chat_id}.txt', 'a+',
             encoding='utf8') as f:
         pass
 
-    with open(f'responded_members/responded_members{update.message.chat_id}.txt', 'r',
+    with open(f'/home/udin76/responded_members/responded_members{update.message.chat_id}.txt', 'r',
                 encoding='utf8') as f:
         responded_members = []
         for user_name in f:
             responded_members.append(str(user_name.strip()))
 
     if update.effective_user.name not in responded_members:
-        with open(f'responded_members/responded_members{update.message.chat_id}.txt', 'a',
+        with open(f'/home/udin76/responded_members/responded_members{update.message.chat_id}.txt', 'a',
                     encoding='utf8') as f:
             print(update.effective_user.name, file=f)
 
     def send_praise_to_chat(context: CallbackContext):
-        with open(f'responded_members/responded_members{update.message.chat_id}.txt', 'r', encoding='utf8') as f:
+        with open(f'/home/udin76/responded_members/responded_members{update.message.chat_id}.txt', 'r', encoding='utf8') as f:
             responded_members = []
             for user_name in f:
                 responded_members.append(user_name.strip())
         number_of_responded_members = len(list(filter(None, responded_members)))
 
-        with open(f'chat_members/chat_members{update.message.chat_id}.txt', 'r', encoding='utf8') as f:
+        with open(f'/home/udin76/chat_members/chat_members{update.message.chat_id}.txt', 'r', encoding='utf8') as f:
             chat_members = []
             for user_name in f:
                 chat_members.append(user_name.strip())
@@ -97,11 +97,11 @@ def get_responded_members(update: Update, context: CallbackContext):
                                     days=tuple(range(0, 5)))
 
     def remind_about_missed_persons(context: CallbackContext):
-        with open(f'responded_members/responded_members{update.message.chat_id}.txt', 'r',
+        with open(f'/home/udin76/responded_members/responded_members{update.message.chat_id}.txt', 'r',
                   encoding='utf8') as f:
             responded_members = f.readlines()
 
-        with open(f'chat_members/chat_members{update.message.chat_id}.txt', 'r',
+        with open(f'/home/udin76/chat_members/chat_members{update.message.chat_id}.txt', 'r',
                   encoding='utf8') as f:
             chat_members = f.readlines()
 
@@ -115,7 +115,7 @@ def get_responded_members(update: Update, context: CallbackContext):
 
 persistence = PicklePersistence(filename='persistent_storage.pkl')
 
-updater = Updater(os.getenv('TOKEN2'), persistence=persistence, use_context=True)
+updater = Updater(os.getenv('TOKEN1'), persistence=persistence, use_context=True)
 
 updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_list))
 
