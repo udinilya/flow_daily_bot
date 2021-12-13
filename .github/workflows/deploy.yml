@@ -17,6 +17,6 @@ jobs:
           script: |
             sudo rm -rf flow_daily_bot
             sudo rm persistent_storage.pkl
-            git clone https://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@github.com/udinilya/flow_daily_bot.git
+            git clone https://${{ secrets.TOKEN_GITHUB }}/udinilya/flow_daily_bot.git
             pkill -9 python
             python3 flow_daily_bot/bot.py &
