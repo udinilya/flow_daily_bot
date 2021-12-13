@@ -1,0 +1,22 @@
+name: deploy
+on: push
+
+jobs:
+  deploy-to-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            sudo rm -rf flow_daily_bot
+            sudo rm persistent_storage.pkl
+            git clone https://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@github.com/udinilya/flow_daily_bot.git
+            pkill -9 python
+            python3 flow_daily_bot/bot.py
