@@ -115,7 +115,7 @@ def get_responded_members(update: Update, context: CallbackContext):
 
 persistence = PicklePersistence(filename='persistent_storage.pkl')
 
-updater = Updater(os.getenv('TOKEN1'), persistence=persistence, use_context=True)
+updater = Updater('2115574444:AAHL5eyZCEjkQRn4FILqYdXvhR4UJp76Ih0', persistence=persistence, use_context=True)
 
 updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_list))
 
