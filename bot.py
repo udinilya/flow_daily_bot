@@ -92,7 +92,7 @@ def get_responded_members(update: Update, context: CallbackContext):
             context.bot.send_message(chat_id=update.message.chat_id,
                                          text='Все ответили! Молодцы!')
 
-    context.job_queue.run_daily(send_praise_to_chat, time=datetime.time(19, 27,
+    context.job_queue.run_daily(send_praise_to_chat, time=datetime.time(12, 1,
                                                                             tzinfo=pytz.timezone('Europe/Moscow')),
                                     days=tuple(range(0, 5)))
 
@@ -109,7 +109,7 @@ def get_responded_members(update: Update, context: CallbackContext):
             if user_name not in responded_members:
                 context.bot.send_message(chat_id=update.message.chat_id,
                                          text=f'Не направлен стaтус от {user_name}')
-    context.job_queue.run_daily(remind_about_missed_persons, time=datetime.time(13, 25,
+    context.job_queue.run_daily(remind_about_missed_persons, time=datetime.time(12, 0,
                                 tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
 
