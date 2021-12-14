@@ -19,4 +19,4 @@ jobs:
             sudo rm persistent_storage.pkl
             git clone https://${{ secrets.TOKEN_GITHUB }}@github.com/udinilya/flow_daily_bot.git
             pkill -9 python
-            sudo nohup python3 flow_daily_bot/bot.py &
+            nohup python3 flow_daily_bot/bot.py &
