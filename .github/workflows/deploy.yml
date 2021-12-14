@@ -22,6 +22,4 @@ jobs:
             sudo git clone https://${{ secrets.TOKEN_GITHUB }}@github.com/udinilya/flow_daily_bot.git
             cd ~
             python3 flow_daily_bot/bot.py &
-            jobs
-            disown -h
-            jobs
+            disown -h %1
