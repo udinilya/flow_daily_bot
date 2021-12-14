@@ -113,9 +113,8 @@ def get_responded_members(update: Update, context: CallbackContext):
                                 tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
 
-def get_test(update: Update, context: CallbackContext):
-    context.bot.send_message(chat_id=update.message.chat_id,
-                             text='test')
+def hello(update: Update, context: CallbackContext):
+    update.message.reply_text(f'Hello {update.effective_user.first_name}')
 
 
 persistence = PicklePersistence(filename='persistent_storage.pkl')
@@ -126,7 +125,7 @@ updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_li
 
 updater.dispatcher.add_handler(CommandHandler('run', get_chat_members))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, get_responded_members))
-updater.dispatcher.add_handler(CommandHandler('test', get_test))
+updater.dispatcher.add_handler(CommandHandler('test', hello))
 
 updater.job_queue.run_daily(status_reminders_are_running, time=datetime.time(9, 0, tzinfo=pytz.timezone('Europe/Moscow')),
                             days=tuple(range(0, 5)))
