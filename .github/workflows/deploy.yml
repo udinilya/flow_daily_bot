@@ -15,6 +15,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            whoami
             sudo rm -rf flow_daily_bot
             sudo rm persistent_storage.pkl
             git clone https://${{ secrets.TOKEN_GITHUB }}@github.com/udinilya/flow_daily_bot.git
