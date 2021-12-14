@@ -92,7 +92,7 @@ def get_responded_members(update: Update, context: CallbackContext):
             context.bot.send_message(chat_id=update.message.chat_id,
                                          text='Все ответили! Молодцы!')
 
-    context.job_queue.run_daily(send_praise_to_chat, time=datetime.time(12, 1,
+    context.job_queue.run_daily(send_praise_to_chat, time=datetime.time(14, 1,
                                                                             tzinfo=pytz.timezone('Europe/Moscow')),
                                     days=tuple(range(0, 5)))
 
