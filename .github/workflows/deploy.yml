@@ -21,3 +21,4 @@ jobs:
             git clone https://${{ secrets.TOKEN_GITHUB }}@github.com/udinilya/flow_daily_bot.git
             pkill -9 python
             python3 flow_daily_bot/bot.py
+            bg
