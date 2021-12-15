@@ -7,6 +7,10 @@ import telegram.error
 import os
 
 
+def hello(update: Update, context: CallbackContext):
+    update.message.reply_text(f'Hello {update.effective_user.first_name}')
+
+
 def status_reminders_are_running(context: CallbackContext):
     with open('/home/udin76/chat_list/chat_list.txt', 'r', encoding='utf8') as f:
         chat_list = f.readlines()
@@ -119,6 +123,7 @@ updater = Updater(os.getenv('TOKEN1'), persistence=persistence, use_context=True
 
 updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_list))
 
+updater.dispatcher.add_handler(CommandHandler('hello', hello))
 updater.dispatcher.add_handler(CommandHandler('run', get_chat_members))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, get_responded_members))
 
