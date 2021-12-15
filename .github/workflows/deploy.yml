@@ -17,7 +17,6 @@ jobs:
           script: |
             pkill -9 python
             sudo rm -rf flow_daily_bot
-            sudo rm persistent_storage.pkl
             git clone https://${{ secrets.TOKEN_GITHUB }}@github.com/udinilya/flow_daily_bot.git
             cd ~
             nohup python3 /home/udin76/flow_daily_bot/bot.py > nohup.out 2> nohup.err < /dev/null &
