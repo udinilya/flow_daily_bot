@@ -20,4 +20,4 @@ jobs:
             sudo rm persistent_storage.pkl
             git clone https://${{ secrets.TOKEN_GITHUB }}@github.com/udinilya/flow_daily_bot.git
             cd ~
-            nohup python3 /home/udin76/flow_daily_bot/bot.py > nohup.out 2> nohup.err < /dev/null &
+            (./python3 /home/udin76/flow_daily_bot/bot.py.sh &) &
