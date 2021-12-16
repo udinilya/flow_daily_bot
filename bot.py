@@ -97,7 +97,7 @@ def get_responded_members(update: Update, context: CallbackContext):
                     context.bot.send_message(chat_id=update.message.chat_id,
                                              text=f'Не направлен стaтус от {user_name}')
 
-    context.job_queue.run_daily(send_feedback_to_chat, time=datetime.time(12, 0,
+    context.job_queue.run_daily(send_feedback_to_chat, time=datetime.time(12, 1,
                                 tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
 
