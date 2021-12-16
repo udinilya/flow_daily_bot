@@ -119,7 +119,12 @@ def get_responded_members(update: Update, context: CallbackContext):
 
 persistence = PicklePersistence(filename='persistent_storage.pkl')
 
-updater = Updater(os.getenv('TOKEN1'), persistence=persistence, use_context=True)
+with open('/home/udin76/token.txt', 'r', encoding='utf8') as f:
+    token = []
+    for element in f:
+        token.append(element.strip())
+
+updater = Updater(token[0], persistence=persistence, use_context=True)
 
 updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_list))
 
