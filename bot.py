@@ -101,6 +101,43 @@ def get_responded_members(update: Update, context: CallbackContext):
                                 tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
 
+def create_list_of_responding_chats(context: CallbackContext):
+    with open('/home/udin76/responded_members/responding_chats.txt', 'a+', encoding='utf8') as f:
+        pass
+
+
+def add_chat_id_in_list_of_responding_chats(update: Update, context: CallbackContext):
+    try:
+        with open('/home/udin76/responded_members/responding_chats.txt', 'r', encoding='utf8') as f:
+            responding_chats = []
+            for chat_id in f:
+                responding_chats.append(int(chat_id.strip()))
+
+        if update.message.chat_id not in responding_chats:
+            with open('/home/udin76/responded_members/responding_chats.txt', 'a', encoding='utf8') as f:
+                print(update.message.chat_id, file=f)
+
+    except FileNotFoundError:
+        with open(f'/home/udin76/responded_members/responding_chats.txt', 'a+', encoding='utf8') as f:
+            print(update.message.chat_id, file=f)
+
+
+def send_message_no_one_write_to_chat(context: CallbackContext):
+    with open('/home/udin76/responded_members/responding_chats.txt', 'r', encoding='utf8') as f:
+        responding_chats = []
+        for chat_id in f:
+            responding_chats.append(chat_id.strip())
+
+    with open('/home/udin76/chat_list/chat_list.txt', 'r', encoding='utf8') as f:
+        chat_list = []
+        for chat_id in f:
+            chat_list.append(chat_id.strip())
+
+    for chat_id in chat_list:
+        if chat_id not in responding_chats:
+            context.bot.send_message(chat_id=chat_id, text='Сегодня никто не направил отчет!')
+
+
 persistence = PicklePersistence(filename='persistent_storage.pkl')
 
 with open('/home/udin76/token.txt', 'r', encoding='utf8') as f:
@@ -114,9 +151,16 @@ updater.dispatcher.add_handler(CommandHandler('hello', hello))
 updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_list))
 updater.dispatcher.add_handler(CommandHandler('run', get_chat_members))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, get_responded_members))
+updater.dispatcher.add_handler(MessageHandler(Filters.text, add_chat_id_in_list_of_responding_chats))
 
-updater.job_queue.run_daily(remind_about_status, time=datetime.time(11, 15, tzinfo=pytz.timezone('Europe/Moscow')),
+updater.job_queue.run_daily(remind_about_status, time=datetime.time(10, 0, tzinfo=pytz.timezone('Europe/Moscow')),
                             days=tuple(range(0, 5)))
+
+updater.job_queue.run_daily(create_list_of_responding_chats, time=datetime.time(1, 0,
+                            tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
+
+updater.job_queue.run_daily(send_message_no_one_write_to_chat, time=datetime.time(12, 1,
+                            tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
 updater.start_polling()
 updater.idle()
