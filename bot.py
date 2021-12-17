@@ -97,7 +97,7 @@ def get_responded_members(update: Update, context: CallbackContext):
                     context.bot.send_message(chat_id=update.message.chat_id,
                                              text=f'Не направлен стaтус от {user_name}')
 
-    context.job_queue.run_daily(send_feedback_to_chat, time=datetime.time(12, 1,
+    context.job_queue.run_daily(send_feedback_to_chat, time=datetime.time(12, 0,
                                 tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
 
@@ -115,7 +115,7 @@ updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_li
 updater.dispatcher.add_handler(CommandHandler('run', get_chat_members))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, get_responded_members))
 
-updater.job_queue.run_daily(remind_about_status, time=datetime.time(11, 8, tzinfo=pytz.timezone('Europe/Moscow')),
+updater.job_queue.run_daily(remind_about_status, time=datetime.time(11, 15, tzinfo=pytz.timezone('Europe/Moscow')),
                             days=tuple(range(0, 5)))
 
 updater.start_polling()
