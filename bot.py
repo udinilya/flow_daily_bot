@@ -121,13 +121,13 @@ updater = Updater(token, persistence=persistence, use_context=True)
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
 updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_list))
 updater.dispatcher.add_handler(CommandHandler('run', get_chat_members))
-updater.dispatcher.add_handler(MessageHandler(Filters.text, add_chat_id_in_list_of_responding_chats))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, get_responded_members))
+updater.dispatcher.add_handler(MessageHandler(Filters.text, add_chat_id_in_list_of_responding_chats))
 
 updater.job_queue.run_daily(remind_about_status, time=datetime.time(10, 0, tzinfo=pytz.timezone('Europe/Moscow')),
                             days=tuple(range(0, 5)))
 
-updater.job_queue.run_daily(create_list_of_responding_chats, time=datetime.time(18, 8,
+updater.job_queue.run_daily(create_list_of_responding_chats, time=datetime.time(1, 0,
                             tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
 updater.job_queue.run_daily(send_message_no_one_write_to_chat, time=datetime.time(12, 2,
