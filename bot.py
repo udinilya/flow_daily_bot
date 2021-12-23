@@ -79,24 +79,24 @@ def get_responded_members(update: Update, context: CallbackContext):
 
 
 def create_list_of_responding_chats(context: CallbackContext):
-    with open('/home/udin76/responded_members/responding_chats.txt', 'a+', encoding='utf8') as f:
+    with open('/home/udin76/responding_chats/responding_chats.txt', 'a+', encoding='utf8') as f:
         pass
 
 
 def add_chat_id_in_list_of_responding_chats(update: Update, context: CallbackContext):
     try:
-        responding_chats = obj_storage_responded_members.get('responding_chats.txt', 'r')
+        responding_chats = obj_storage_responding_chats.get('responding_chats.txt', 'r')
 
         if str(update.message.chat_id) not in responding_chats:
-            obj_storage_responded_members.set('responding_chats.txt', 'a', value=update.message.chat_id)
+            obj_storage_responding_chats.set('responding_chats.txt', 'a', value=update.message.chat_id)
 
     except FileNotFoundError:
-        with open(f'/home/udin76/responded_members/responding_chats.txt', 'a+', encoding='utf8') as f:
+        with open(f'/home/udin76/responding_chats/responding_chats.txt', 'a+', encoding='utf8') as f:
             print(update.message.chat_id, file=f)
 
 
 def send_message_no_one_write_to_chat(context: CallbackContext):
-    responding_chats = obj_storage_responded_members.get('responding_chats.txt', 'r')
+    responding_chats = obj_storage_responding_chats.get('responding_chats.txt', 'r')
     chat_list = obj_storage.get('chat_list.txt', 'r')
 
     for chat_id in chat_list:
@@ -109,6 +109,7 @@ def send_message_no_one_write_to_chat(context: CallbackContext):
 
 obj_storage = ObjectStorage('/home/udin76/storage')
 obj_storage_responded_members = ObjectStorage('/home/udin76/responded_members')
+obj_storage_responding_chats = ObjectStorage('home/udin76/responding_chats')
 
 persistence = PicklePersistence(filename='persistent_storage.pkl')
 
