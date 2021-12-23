@@ -129,7 +129,7 @@ updater.job_queue.run_daily(remind_about_status, time=datetime.time(10, 0, tzinf
 updater.job_queue.run_daily(create_list_of_responding_chats, time=datetime.time(5, 0,
                             tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
-updater.job_queue.run_daily(send_message_no_one_write_to_chat, time=datetime.time(12, 1,
+updater.job_queue.run_daily(send_message_no_one_write_to_chat, time=datetime.time(12, 2,
                             tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
 updater.start_polling()
