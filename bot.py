@@ -5,7 +5,7 @@ from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters, PicklePersistence
 import telegram.error
 import os
-from object_storage import ObjectStorage
+from objectstorage import ObjectStorage
 
 
 def hello(update: Update, context: CallbackContext):
@@ -13,7 +13,7 @@ def hello(update: Update, context: CallbackContext):
 
 
 def remind_about_status(context: CallbackContext):
-    chat_list = obj_storage.get('chat_list.txt', 'r')
+    chat_list = obj_storage.get('chat_list.txt')
     for chat_id in chat_list:
         try:
             context.bot.send_message(chat_id=chat_id, text='Не забудьте написать о выполненных задачах')
@@ -23,45 +23,40 @@ def remind_about_status(context: CallbackContext):
 
 def add_chat_id_in_chat_list(update: Update, context: CallbackContext):
     try:
-        chat_list = obj_storage.get('chat_list.txt', 'r')
+        chat_list = obj_storage.get('chat_list.txt')
         if str(update.message.chat_id) not in chat_list:
-            obj_storage.set('chat_list.txt', 'a', value=update.message.chat_id)
+            obj_storage.set('chat_list.txt', value=update.message.chat_id)
 
     except FileNotFoundError:
-        with open(f'/home/udin76/storage/chat_list.txt', 'a+', encoding='utf8') as f:
-            print(update.message.chat_id, file=f)
+        obj_storage.set('chat_list.txt', value=update.message.chat_id)
 
 
 def get_chat_members(update: Update, context: CallbackContext):
     try:
-        chat_members = obj_storage.get(f'chat_members{update.message.chat_id}.txt', 'r')
+        chat_members = obj_storage.get(f'chat_members{update.message.chat_id}.txt')
         if str(update.effective_user.name) not in chat_members:
-            obj_storage.set(f'chat_members{update.message.chat_id}.txt', 'a',
-                            value=update.effective_user.name)
+            obj_storage.set(f'chat_members{update.message.chat_id}.txt', value=update.effective_user.name)
 
     except FileNotFoundError:
-        with open(f'/home/udin76/storage/chat_members{update.message.chat_id}.txt', 'a+',
-                  encoding='utf8') as f:
-            print(update.effective_user.name, file=f)
+        obj_storage.set(f'chat_members{update.message.chat_id}.txt', value=update.effective_user.name)
 
 
 def get_responded_members(update: Update, context: CallbackContext):
     try:
-        responded_members = obj_storage_responded_members.get(f'responded_members{update.message.chat_id}.txt', 'r')
+        responded_members = obj_storage_responded_members.get(f'responded_members{update.message.chat_id}.txt')
         if str(update.effective_user.name) not in responded_members:
-            obj_storage_responded_members.set(f'responded_members{update.message.chat_id}.txt', 'a',
+            obj_storage_responded_members.set(f'responded_members{update.message.chat_id}.txt',
                                               value=update.effective_user.name)
 
     except FileNotFoundError:
-        with open(f'/home/udin76/responded_members/responded_members{update.message.chat_id}.txt', 'a+',
-                  encoding='utf8') as f:
-            print(update.effective_user.name, file=f)
+        obj_storage_responded_members.set(f'responded_members{update.message.chat_id}.txt',
+                                          value=update.effective_user.name)
 
     def send_feedback_to_chat(context: CallbackContext):
-        responded_members = obj_storage_responded_members.get(f'responded_members{update.message.chat_id}.txt', 'r')
+        responded_members = obj_storage_responded_members.get(f'responded_members{update.message.chat_id}.txt')
         number_of_responded_members = len(list(filter(None, responded_members)))
 
-        chat_members = obj_storage.get(f'chat_members{update.message.chat_id}.txt', 'r')
+        chat_members = obj_storage.get(f'chat_members{update.message.chat_id}.txt',)
         number_of_chat_members = len(list(filter(None, chat_members)))
 
         if number_of_responded_members == number_of_chat_members:
@@ -79,25 +74,23 @@ def get_responded_members(update: Update, context: CallbackContext):
 
 
 def create_list_of_responding_chats(context: CallbackContext):
-    with open('/home/udin76/responding_chats/responding_chats.txt', 'a+', encoding='utf8') as f:
-        pass
+    obj_storage_responded_members.set('responding_chats.txt', value='')
 
 
 def add_chat_id_in_list_of_responding_chats(update: Update, context: CallbackContext):
     try:
-        responding_chats = obj_storage_responding_chats.get('responding_chats.txt', 'r')
+        responding_chats = obj_storage_responded_members.get('responding_chats.txt')
 
         if str(update.message.chat_id) not in responding_chats:
-            obj_storage_responding_chats.set('responding_chats.txt', 'a', value=update.message.chat_id)
+            obj_storage_responded_members.set('responding_chats.txt', value=update.message.chat_id)
 
     except FileNotFoundError:
-        with open(f'/home/udin76/responding_chats/responding_chats.txt', 'a+', encoding='utf8') as f:
-            print(update.message.chat_id, file=f)
+        obj_storage_responded_members.set('responding_chats.txt', value=update.message.chat_id)
 
 
 def send_message_no_one_write_to_chat(context: CallbackContext):
-    responding_chats = obj_storage_responding_chats.get('responding_chats.txt', 'r')
-    chat_list = obj_storage.get('chat_list.txt', 'r')
+    responding_chats = obj_storage_responded_members.get('responding_chats.txt')
+    chat_list = obj_storage.get('chat_list.txt')
 
     for chat_id in chat_list:
         try:
@@ -109,7 +102,7 @@ def send_message_no_one_write_to_chat(context: CallbackContext):
 
 obj_storage = ObjectStorage('/home/udin76/storage')
 obj_storage_responded_members = ObjectStorage('/home/udin76/responded_members')
-obj_storage_responding_chats = ObjectStorage('home/udin76/responding_chats')
+
 
 persistence = PicklePersistence(filename='persistent_storage.pkl')
 
