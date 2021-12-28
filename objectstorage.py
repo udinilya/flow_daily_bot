@@ -3,23 +3,17 @@ class ObjectStorage:
         self.relative_path = relative_path
 
     def get(self, obj_type):
-        if 'respond' in obj_type:
-            with open(f'{self.relative_path}/responded_members/{obj_type}.txt', 'r') as f:
+        try:
+            directory = 'responded_members' if 'respond' in obj_type else 'storage'
+            with open(f'{self.relative_path}/{directory}/{obj_type}.txt', 'r') as f:
                 data = []
                 for elem in f:
                     data.append(elem.strip())
-                return data
-        else:
-            with open(f'{self.relative_path}/storage/{obj_type}.txt', 'r') as f:
-                data = []
-                for elem in f:
-                    data.append(elem.strip())
-                return data
+            return data
+        except FileNotFoundError:
+            return []
 
     def set(self, obj_type, value):
-        if 'respond' in obj_type:
-            with open(f'{self.relative_path}/responded_members/{obj_type}.txt', 'a+') as f:
-                print(value, file=f)
-        else:
-            with open(f'{self.relative_path}/storage/{obj_type}.txt', 'a+') as f:
-                print(value, file=f)
+        directory = 'responded_members' if 'respond' in obj_type else 'storage'
+        with open(f'{self.relative_path}/{directory}/{obj_type}.txt', 'a+') as f:
+            print(value, file=f)

@@ -22,32 +22,20 @@ def remind_about_status(context: CallbackContext):
 
 
 def add_chat_id_in_chat_list(update: Update, context: CallbackContext):
-    try:
-        chat_list = obj_storage.get('chat_list')
-        if str(update.message.chat_id) not in chat_list:
-            obj_storage.set('chat_list', value=update.message.chat_id)
-
-    except FileNotFoundError:
+    chat_list = obj_storage.get('chat_list')
+    if str(update.message.chat_id) not in chat_list:
         obj_storage.set('chat_list', value=update.message.chat_id)
 
 
 def get_chat_members(update: Update, context: CallbackContext):
-    try:
-        chat_members = obj_storage.get(f'chat_members{update.message.chat_id}')
-        if str(update.effective_user.name) not in chat_members:
-            obj_storage.set(f'chat_members{update.message.chat_id}', value=update.effective_user.name)
-
-    except FileNotFoundError:
+    chat_members = obj_storage.get(f'chat_members{update.message.chat_id}')
+    if str(update.effective_user.name) not in chat_members:
         obj_storage.set(f'chat_members{update.message.chat_id}', value=update.effective_user.name)
 
 
 def get_responded_members(update: Update, context: CallbackContext):
-    try:
-        responded_members = obj_storage.get(f'responded_members{update.message.chat_id}')
-        if str(update.effective_user.name) not in responded_members:
-            obj_storage.set(f'responded_members{update.message.chat_id}', value=update.effective_user.name)
-
-    except FileNotFoundError:
+    responded_members = obj_storage.get(f'responded_members{update.message.chat_id}')
+    if str(update.effective_user.name) not in responded_members:
         obj_storage.set(f'responded_members{update.message.chat_id}', value=update.effective_user.name)
 
     def send_feedback_to_chat(context: CallbackContext):
@@ -76,13 +64,8 @@ def create_list_of_responding_chats(context: CallbackContext):
 
 
 def add_chat_id_in_list_of_responding_chats(update: Update, context: CallbackContext):
-    try:
-        responding_chats = obj_storage.get('responding_chats')
-
-        if str(update.message.chat_id) not in responding_chats:
-            obj_storage.set('responding_chats', value=update.message.chat_id)
-
-    except FileNotFoundError:
+    responding_chats = obj_storage.get('responding_chats')
+    if str(update.message.chat_id) not in responding_chats:
         obj_storage.set('responding_chats', value=update.message.chat_id)
 
 
@@ -99,7 +82,6 @@ def send_message_no_one_write_to_chat(context: CallbackContext):
 
 
 obj_storage = ObjectStorage('/home/udin76')
-
 
 persistence = PicklePersistence(filename='persistent_storage.pkl')
 
