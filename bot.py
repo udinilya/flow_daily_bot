@@ -37,31 +37,29 @@ def text_handler(update: Update, context: CallbackContext):
     get_responded_members(update, context)
     add_chat_id_in_list_of_responding_chats(update, context)
 
+    global chat_id
+    chat_id = update.message.chat_id
+
 
 def get_responded_members(update: Update, context: CallbackContext):
     responded_members = obj_storage[f'responded_members{update.message.chat_id}']
     if str(update.effective_user.name) not in responded_members:
         obj_storage.set(f'responded_members{update.message.chat_id}', value=update.effective_user.name)
 
-    def send_feedback_to_chat(context: CallbackContext):
-        responded_members = obj_storage[f'responded_members{update.message.chat_id}']
-        number_of_responded_members = len(list(filter(None, responded_members)))
 
-        chat_members = obj_storage[f'chat_members{update.message.chat_id}']
-        number_of_chat_members = len(list(filter(None, chat_members)))
+def send_feedback_to_chat(context: CallbackContext):
+    responded_members = obj_storage[f'responded_members{chat_id}']
+    number_of_responded_members = len(list(filter(None, responded_members)))
 
-        if number_of_responded_members == number_of_chat_members:
-            context.bot.send_message(chat_id=update.message.chat_id,
-                                     text='Все ответили! Молодцы!')
-        else:
-            for user_name in chat_members:
-                if user_name not in responded_members:
-                    context.bot.send_message(chat_id=update.message.chat_id,
-                                             text=f'Не направлен стaтус от {user_name}')
+    chat_members = obj_storage[f'chat_members{chat_id}']
+    number_of_chat_members = len(list(filter(None, chat_members)))
 
-    context.job_queue.run_daily(send_feedback_to_chat, time=datetime.time(12, 0,
-                                                                          tzinfo=pytz.timezone('Europe/Moscow')),
-                                days=tuple(range(0, 5)))
+    if number_of_responded_members == number_of_chat_members:
+        context.bot.send_message(chat_id=chat_id, text='Все ответили! Молодцы!')
+    else:
+        for user_name in chat_members:
+            if user_name not in responded_members:
+                context.bot.send_message(chat_id=chat_id, text=f'Не направлен стaтус от {user_name}')
 
 
 def add_chat_id_in_list_of_responding_chats(update: Update, context: CallbackContext):
@@ -100,6 +98,9 @@ updater.job_queue.run_daily(remind_about_status, time=datetime.time(10, 0, tzinf
                             days=tuple(range(0, 5)))
 
 updater.job_queue.run_daily(send_message_no_one_write_to_chat, time=datetime.time(12, 0,
+                            tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
+
+updater.job_queue.run_daily(send_feedback_to_chat, time=datetime.time(12, 0,
                             tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
 
 updater.start_polling()
