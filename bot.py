@@ -15,7 +15,7 @@ def start(update: Update, context: CallbackContext):
 
 def help(update: Update, context):
     help_text = obj_storage['help']
-    update.effective_user.send_message('\n'.join(help_text))
+    update.message.reply_text('\n'.join(help_text))
 
 
 def remind_about_status(context: CallbackContext):
