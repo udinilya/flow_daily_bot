@@ -8,8 +8,14 @@ import os
 from objectstorage import ObjectStorage
 
 
-def hello(update: Update, context: CallbackContext):
-    update.message.reply_text(f'Hello {update.effective_user.first_name}')
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text(f'Добрый день, {update.effective_user.first_name}. '
+                              f'Я - flow_daily_bot. Я помогу вам в дальнейшей работе в данном чате.')
+
+
+def help(update: Update, context):
+    help_text = obj_storage['help']
+    update.effective_user.send_message('\n'.join(help_text))
 
 
 def remind_about_status(context: CallbackContext):
@@ -89,7 +95,8 @@ with open('/home/udin76/token.txt', 'r', encoding='utf8') as f:
 
 updater = Updater(token, persistence=persistence, use_context=True)
 
-updater.dispatcher.add_handler(CommandHandler('hello', hello))
+updater.dispatcher.add_handler(CommandHandler('start', start))
+updater.dispatcher.add_handler(CommandHandler('help', help))
 updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_list))
 updater.dispatcher.add_handler(CommandHandler('run', get_chat_members))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, text_handler))
