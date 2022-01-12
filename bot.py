@@ -43,9 +43,6 @@ def text_handler(update: Update, context: CallbackContext):
     get_responded_members(update, context)
     add_chat_id_in_list_of_responding_chats(update, context)
 
-    global chat_id
-    chat_id = update.message.chat_id
-
 
 def get_responded_members(update: Update, context: CallbackContext):
     responded_members = obj_storage[f'responded_members{update.message.chat_id}']
@@ -54,18 +51,22 @@ def get_responded_members(update: Update, context: CallbackContext):
 
 
 def send_feedback_to_chat(context: CallbackContext):
+    chat_id = context.job.context
     responded_members = obj_storage[f'responded_members{chat_id}']
     number_of_responded_members = len(list(filter(None, responded_members)))
 
     chat_members = obj_storage[f'chat_members{chat_id}']
     number_of_chat_members = len(list(filter(None, chat_members)))
 
-    if number_of_responded_members == number_of_chat_members:
-        context.bot.send_message(chat_id=chat_id, text='Все ответили! Молодцы!')
-    else:
-        for user_name in chat_members:
-            if user_name not in responded_members:
-                context.bot.send_message(chat_id=chat_id, text=f'Не направлен стaтус от {user_name}')
+    try:
+        if number_of_responded_members == number_of_chat_members:
+            context.bot.send_message(chat_id=chat_id, text='Все ответили! Молодцы!')
+        else:
+            for user_name in chat_members:
+                if user_name not in responded_members:
+                    context.bot.send_message(chat_id=chat_id, text=f'Не направлен стaтус от {user_name}')
+    except (telegram.error.Unauthorized, telegram.error.BadRequest):
+        pass
 
 
 def add_chat_id_in_list_of_responding_chats(update: Update, context: CallbackContext):
@@ -82,7 +83,7 @@ def send_message_no_one_write_to_chat(context: CallbackContext):
         try:
             if chat_id not in responding_chats:
                 context.bot.send_message(chat_id=chat_id, text='Сегодня никто не направил отчет!')
-        except telegram.error.BadRequest:
+        except (telegram.error.Unauthorized, telegram.error.BadRequest):
             pass
 
 
@@ -101,14 +102,25 @@ updater.dispatcher.add_handler(CommandHandler('register', add_chat_id_in_chat_li
 updater.dispatcher.add_handler(CommandHandler('run', get_chat_members))
 updater.dispatcher.add_handler(MessageHandler(Filters.text, text_handler))
 
-updater.job_queue.run_daily(remind_about_status, time=datetime.time(10, 0, tzinfo=pytz.timezone('Europe/Moscow')),
-                            days=tuple(range(0, 5)))
+updater.job_queue.run_daily(
+    remind_about_status,
+    time=datetime.time(10, 0, tzinfo=pytz.timezone('Europe/Moscow')),
+    days=tuple(range(0, 5))
+)
 
-updater.job_queue.run_daily(send_message_no_one_write_to_chat, time=datetime.time(12, 0,
-                            tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
+updater.job_queue.run_daily(
+    send_message_no_one_write_to_chat,
+    time=datetime.time(12, 0, tzinfo=pytz.timezone('Europe/Moscow')),
+    days=tuple(range(0, 5))
+)
 
-updater.job_queue.run_daily(send_feedback_to_chat, time=datetime.time(12, 0,
-                            tzinfo=pytz.timezone('Europe/Moscow')), days=tuple(range(0, 5)))
+for chat_id in obj_storage['chat_list']:
+    updater.job_queue.run_daily(
+        send_feedback_to_chat,
+        time=datetime.time(12, 0, tzinfo=pytz.timezone('Europe/Moscow')),
+        days=tuple(range(0, 5)),
+        context=chat_id
+    )
 
 updater.start_polling()
 updater.idle()
