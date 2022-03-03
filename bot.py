@@ -117,7 +117,7 @@ updater.job_queue.run_daily(
 for chat_id in obj_storage['chat_list']:
     updater.job_queue.run_daily(
         send_feedback_to_chat,
-        time=datetime.time(12, 1, tzinfo=pytz.timezone('Europe/Moscow')),
+        time=datetime.time(12, 2, tzinfo=pytz.timezone('Europe/Moscow')),
         days=tuple(range(0, 5)),
         context=chat_id
     )
